@@ -53,15 +53,15 @@ public class PlayerController : MonoBehaviour
 
     private const int OPPONENT_VELOCITY = 215;
 
-    [SerializeField]
-    private GameObject _enemy;
+    //[SerializeField]
+    //private GameObject _enemy;
 
     // Start is called before the first frame update
     void Start()
     {
         //Instantiate(_enemy, new Vector3(0, 0, 0), Quaternion.identity);
         real_time_client = new RealTimeClient();
-        gameSession = new GameSessionFirst(real_time_client, _enemy);
+        gameSession = new GameSessionFirst(real_time_client);
         currentState = PlayerState.walk;
         player = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
@@ -87,6 +87,10 @@ public class PlayerController : MonoBehaviour
         //RTMessage posMessage = new RTMessage(opCode: OPPONENT_VELOCITY, targetPlayer: server_id, deliveryIntent: FAST, payload: posToSend);
         // posMessage.uuid = matchId;
         //SendWebSocketMessage(JsonUtility.ToJson(posMessage));
+
+        string senderID = real_time_client.player_ID;
+        posToSend = posToSend + senderID;
+
         real_time_client.SendMessage(DeliveryIntent.Fast, OPPONENT_VELOCITY, posToSend);
     }
    

@@ -60,15 +60,15 @@ public class GameSessionFirst
 
    public static string gameSessionId;
 
-   private GameObject enemy;
+   //private GameObject enemy;
 
    [Inject]
-   public GameSessionFirst(RealTimeClient realTimeClient, GameObject _enemy)
+   public GameSessionFirst(RealTimeClient realTimeClient)
    {
         Debug.Log("Establishing game session.");
         _realTimeClient = realTimeClient;
         setupMatch();
-        enemy = _enemy;
+        //enemy = _enemy;
    }
 
    // make this more descriptive to the player's action, like ballThrown
@@ -162,7 +162,7 @@ public class GameSessionFirst
             }
             else
             {
-               joinMatch(playerSessionObj.IpAddress, playerSessionObj.Port, playerSessionObj.PlayerSessionId);
+               joinMatch(playerSessionObj.IpAddress, playerSessionObj.Port, playerSessionObj.PlayerSessionId, playerSessionObj.PlayerId);
             }
          }
             else
@@ -179,14 +179,14 @@ public class GameSessionFirst
         
 
    // joins match using these parameters
-   void joinMatch(string playerSessionDns, string playerSessionPort, string playerSessionId)
+   void joinMatch(string playerSessionDns, string playerSessionPort, string playerSessionId, string PlayerId)
    {
       Debug.Log($"[client] Attempting to connect to server dns: {playerSessionDns} TCP port: {playerSessionPort} Player Session ID: {playerSessionId}");
 
       int localPort = GetAvailablePort();
 
       _realTimeClient.init(playerSessionDns,
-         Int32.Parse(playerSessionPort), localPort, ConnectionType.RT_OVER_WS_UDP_UNSECURED, playerSessionId, connectionPayload, enemy);
+         Int32.Parse(playerSessionPort), localPort, ConnectionType.RT_OVER_WS_UDP_UNSECURED, playerSessionId, connectionPayload, PlayerId);
    }
 
    // gets an available port using System.Net (got this from the video)

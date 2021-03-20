@@ -3,6 +3,7 @@
 using System;
 using System.Text;
 using System.Collections;
+using System.Collections.Generic;
 using Aws.GameLift.Realtime;
 using Aws.GameLift.Realtime.Event;
 using Aws.GameLift.Realtime.Types;
@@ -16,21 +17,30 @@ using Zenject;
  * ClientLogger.LogHandler = (x) => Console.WriteLine(x);
  *
  */
-public class RealTimeClient
+public class RealTimeClient : MonoBehaviour
 {
     public Aws.GameLift.Realtime.Client Client { get; private set; }
 
     //private EnemyPositionHandler _enemyPositionHandler = null;
     public GameObject _enemy;
+    //public GameObject[] enemy_list;
+    List<GameObject> enemy_list = new List<GameObject>();
+
+    //public playerIDdict = {};
+    Dictionary<string, GameObject> playerIDdict = new Dictionary<string, GameObject>();
 
     //private SceneHandlerService _sceneHandlerService;
 
     // An opcode defined by client and your server script that represents a custom message type
     private const int MY_TEST_OP_CODE = 10;
     private const int OPPONENT_VELOCITY = 215;
+    private const int SEND_PLAYER_LIST = 415;
 
 
     private GameSessionFirst gameSession;
+
+    public string player_ID;
+
 
     /*
     [Inject]
@@ -48,7 +58,7 @@ public class RealTimeClient
     /// <param name="playerSessionId">The player session ID that is assigned to the game client for a game session </param>
     /// <param name="connectionPayload">Developer-defined data to be used during client connection, such as for player authentication</param>
     public void init(string endpoint, int remoteTcpPort, int listeningUdpPort, ConnectionType connectionType,
-                 string playerSessionId, byte[] connectionPayload, GameObject enemy)
+                 string playerSessionId, byte[] connectionPayload, string playerID)
     {
         Debug.Log("Entered RealTimeClient");
 
@@ -84,9 +94,12 @@ public class RealTimeClient
 
         //Instantiate(_enemy, new Vector3(0, 0, 0), Quaternion.identity);
 
-        _enemy = enemy;
+        //_enemy = enemy;
 
-      
+        player_ID = playerID;
+
+
+
     }
 
 
@@ -197,8 +210,48 @@ public class RealTimeClient
             case RealTimeClient.OPPONENT_VELOCITY:
                 //PlayerPositionMessage posMessage = JsonUtility.FromJson<PlayerPositionMessage>(message);
                 //_enemy.Move(data);
-                _enemy.GetComponent<Enemy>().Move(data);
+
+                //_enemy.GetComponent<Enemy>().Move(data);
+                // Change ^ to below
+
+
+                //peerID = e.Sender;
+
+
+
+                // enemy_list[peerID].Move(data);
+
+
                 //Debug.Log("Opponent velocity: " + data);
+
+                break;
+
+
+            case RealTimeClient.SEND_PLAYER_LIST:
+                // add code to receive list of playerIDs and create a dict with the IDs as keys and either
+                // Player or Enemy instances as values
+                Debug.Log("Adi :" + data);
+
+                string[] playerIDs = data.Split(',');
+
+                for (int i=0; i < playerIDs.Length; i++)
+                {
+                    //_enemy.GetComponent<Enemy>();
+                    GameObject new_enemy = (GameObject)Instantiate(_enemy, new Vector3(0, 0, 0), Quaternion.identity);
+                    //enemy_list.Add(Instantiate(_enemy, new Vector3(0, 0, 0), Quaternion.identity));
+                    enemy_list.Add(new_enemy);
+                    playerIDdict[playerIDs[i]] = enemy_list[i];
+                }
+
+                /*
+                foreach (playerID in playerIDs)
+                {
+                    playerIDdict[playerID] = enemy_list[0];
+                }
+                */
+
+                // create GameObjects for each playerID; create dictionary up above and add them here
+                // enemy[i].GetComponent<Enemy>()
 
                 break;
 
