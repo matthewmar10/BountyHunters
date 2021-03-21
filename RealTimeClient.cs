@@ -17,17 +17,15 @@ using Zenject;
  * ClientLogger.LogHandler = (x) => Console.WriteLine(x);
  *
  */
-public class RealTimeClient : MonoBehaviour
+public class RealTimeClient
 {
     public Aws.GameLift.Realtime.Client Client { get; private set; }
 
-    //private EnemyPositionHandler _enemyPositionHandler = null;
-    public GameObject _enemy;
     //public GameObject[] enemy_list;
-    List<GameObject> enemy_list = new List<GameObject>();
+    //List<GameObject> enemy_list = new List<GameObject>();
 
     //public playerIDdict = {};
-    Dictionary<string, GameObject> playerIDdict = new Dictionary<string, GameObject>();
+    //  
 
     //private SceneHandlerService _sceneHandlerService;
 
@@ -36,17 +34,17 @@ public class RealTimeClient : MonoBehaviour
     private const int OPPONENT_VELOCITY = 215;
     private const int SEND_PLAYER_LIST = 415;
 
-
+    
     private GameSessionFirst gameSession;
+    private EnemyPositionHandler handler;
 
     public string player_ID;
 
-
     /*
     [Inject]
-    public RealTimeClient(SceneHandlerService sceneHandlerService)
+    public RealTimeClient(GameObject controller)
     {
-        _sceneHandlerService = sceneHandlerService;
+        enemyController = controller; 
     }
     */
 
@@ -87,19 +85,9 @@ public class RealTimeClient : MonoBehaviour
         // Initiate a connection with the Realtime server with the given connection information
         Client.Connect(endpoint, remoteTcpPort, listeningUdpPort, connectionToken);
 
-        //_enemyPositionHandler = FindObjectOfType<EnemyPositionHandler>();
-
-        //Vector3 enemyStartPos = new Vector3(0, 0, 0);
-        //_enemyPositionHandler.init(enemyStartPos);
-
-        //Instantiate(_enemy, new Vector3(0, 0, 0), Quaternion.identity);
-
-        //_enemy = enemy;
-
         player_ID = playerID;
 
-
-
+        handler = GameObject.Find("EnemyController").GetComponent<EnemyPositionHandler>();
     }
 
 
@@ -217,31 +205,30 @@ public class RealTimeClient : MonoBehaviour
 
                 //peerID = e.Sender;
 
-
-
                 // enemy_list[peerID].Move(data);
 
-
+                handler.UpdateVelocity(data);
                 //Debug.Log("Opponent velocity: " + data);
 
                 break;
 
 
             case RealTimeClient.SEND_PLAYER_LIST:
+
+                // call the Enemy.instantiate function and pass it the list of playerIDs
+                string[] playerIDs = data.Split(',');
+
                 // add code to receive list of playerIDs and create a dict with the IDs as keys and either
                 // Player or Enemy instances as values
                 Debug.Log("Adi :" + data);
 
-                string[] playerIDs = data.Split(',');
+                System.Threading.Thread.Sleep(30000);
+                handler.CreateEnemies(playerIDs);
 
-                for (int i=0; i < playerIDs.Length; i++)
-                {
-                    //_enemy.GetComponent<Enemy>();
-                    GameObject new_enemy = (GameObject)Instantiate(_enemy, new Vector3(0, 0, 0), Quaternion.identity);
-                    //enemy_list.Add(Instantiate(_enemy, new Vector3(0, 0, 0), Quaternion.identity));
-                    enemy_list.Add(new_enemy);
-                    playerIDdict[playerIDs[i]] = enemy_list[i];
-                }
+                
+                //Debug.Log("Texas" + playerIDs);
+
+                
 
                 /*
                 foreach (playerID in playerIDs)
@@ -250,7 +237,7 @@ public class RealTimeClient : MonoBehaviour
                 }
                 */
 
-                // create GameObjects for each playerID; create dictionary up above and add them here
+                
                 // enemy[i].GetComponent<Enemy>()
 
                 break;

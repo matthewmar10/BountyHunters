@@ -1,5 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Text;
+using System.Collections;
 using System.Collections.Generic;
+using Aws.GameLift.Realtime;
+using Aws.GameLift.Realtime.Event;
+using Aws.GameLift.Realtime.Types;
 using UnityEngine;
 using Zenject;
 
@@ -78,8 +83,8 @@ public class Enemy : MonoBehaviour
 
         moveDirection = new Vector3(flt1, flt2, flt3);
 
-        _enemy.MovePosition(
-            transform.position + moveDirection * speed * Time.deltaTime);
+        //_enemy.MovePosition(
+        //    transform.position + moveDirection * speed * Time.deltaTime);
 
 
         anim.SetFloat("moveX", moveDirection.x);
@@ -92,6 +97,38 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
+    /*
+    public void Instantiate(string[] playerIDs)
+    {
+
+        // instantiate these bad boys here
+
+
+        foreach (var playerid in playerIDs)
+        {
+            Debug.Log(playerid);
+        }
+
+        // create GameObjects for each playerID; add them to dictionary
+        for (int i = 0; i < playerIDs.Length; i++)
+        {
+            //_enemy.GetComponent<Enemy>();
+            Debug.Log("Texas" + playerIDs[i]);
+            GameObject new_enemy = (GameObject)Instantiate(_enemy, new Vector3(0, 0, 0), Quaternion.identity);
+            //enemy_list.Add(Instantiate(_enemy, new Vector3(0, 0, 0), Quaternion.identity));
+
+
+            enemy_list.Add(new_enemy);
+            playerIDdict[playerIDs[i]] = enemy_list[i];
+
+            Debug.Log("i " + i);
+        }
+
+
+
+    }
+    */
 
 
 
@@ -139,18 +176,20 @@ public class Enemy : MonoBehaviour
         // enemyPositionMessageQueue = new SortedList<int, PlayerPositionMessage>();
     }
 
+    /*
     public void SetActive(bool activeFlag)
     {
         gameObject.SetActive(activeFlag);
     }
+    */
 
     void Awake()
     {
         Debug.Log("Enemy Awake");
         // _enemy = gameObject.GetComponent<Rigidbody2D>();
-        _enemy = GetComponent<Rigidbody2D>();
+        //_enemy = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        SetActive(true);
+        //SetActive(true);
     }
 
     void Start()

@@ -53,9 +53,6 @@ public class PlayerController : MonoBehaviour
 
     private const int OPPONENT_VELOCITY = 215;
 
-    //[SerializeField]
-    //private GameObject _enemy;
-
     // Start is called before the first frame update
     void Start()
     {
