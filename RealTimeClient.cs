@@ -25,7 +25,6 @@ public class RealTimeClient
     //List<GameObject> enemy_list = new List<GameObject>();
 
     //public playerIDdict = {};
-    //  
 
     //private SceneHandlerService _sceneHandlerService;
 
@@ -222,7 +221,7 @@ public class RealTimeClient
                 // Player or Enemy instances as values
                 Debug.Log("Adi :" + data);
 
-                System.Threading.Thread.Sleep(30000);
+                //System.Threading.Thread.Sleep(30000);
                 handler.CreateEnemies(playerIDs);
 
                 

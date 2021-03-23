@@ -102,9 +102,6 @@ public class Enemy : MonoBehaviour
     public void Instantiate(string[] playerIDs)
     {
 
-        // instantiate these bad boys here
-
-
         foreach (var playerid in playerIDs)
         {
             Debug.Log(playerid);
@@ -124,7 +121,6 @@ public class Enemy : MonoBehaviour
 
             Debug.Log("i " + i);
         }
-
 
 
     }

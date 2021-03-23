@@ -8,31 +8,31 @@ public class EnemyPositionHandler : MonoBehaviour
     public GameObject enemy;
     Dictionary<string, GameObject> playerIDdict;
 
+    private bool enemyAllowed = false;
+    private string[] playerIDList;
+
     public void CreateEnemies(string[] playerList)
     {
-        
+        playerIDList = playerList;
 
-        playerIDdict = new Dictionary<string, GameObject>();
-
-        //Instantiate(enemy, transform.position, Quaternion.identity);
-        //Debug.Log("test1");
-
-        for (int i = 0; i < playerList.Length; i++)
-        {
-            Debug.Log("Texas" + playerList[i]);
-            GameObject new_enemy = Instantiate(enemy, transform.position, Quaternion.identity);
-  
-            //playerIDdict[playerList[i]] = new_enemy;
-
-            Debug.Log("i " + i);
-        }
+        enemyAllowed = true;    
     }
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (enemyAllowed)
         {
-            Instantiate(enemy, transform.position, Quaternion.identity);
+            playerIDdict = new Dictionary<string, GameObject>();
+            for (int i = 0; i < playerIDList.Length; i++)
+            {
+                Debug.Log("Texas" + playerIDList[i]);
+
+                GameObject new_enemy = (GameObject)Instantiate(enemy, transform.position, Quaternion.identity);
+                playerIDdict[playerIDList[i]] = new_enemy;
+
+                Debug.Log("i " + i);
+            }
+            enemyAllowed = false;
         }
     }
 

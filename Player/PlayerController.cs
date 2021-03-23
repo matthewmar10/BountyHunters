@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
     private RealTimeClient real_time_client;
 
     private const int OPPONENT_VELOCITY = 215;
+    private const int SEND_PLAYER_LIST = 415;
 
     // Start is called before the first frame update
     void Start()
@@ -142,9 +143,16 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         ProcessInputs();
-    }  
 
-    void FixedUpdate()
+        if (Input.GetButtonDown("Fire1"))
+        {
+            real_time_client.SendMessage(DeliveryIntent.Fast, SEND_PLAYER_LIST, real_time_client.player_ID);
+        }
+    }
+
+
+
+void FixedUpdate()
     {
         
     }
